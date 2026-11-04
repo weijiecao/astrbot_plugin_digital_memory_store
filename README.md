@@ -3,6 +3,14 @@
 AstrBot 插件：把**私聊纯文本**里的原话保存在本机，需要时以“未确认线索”的形式回注给模型。
 默认关闭；不自动确认事实；除显式开启的可选功能外不联网。
 
+## 下载
+
+- 从 [Releases](https://github.com/weijiecao/astrbot_plugin_digital_memory_store/releases)
+  下载 `astrbot_plugin_digital_memory_store-<version>.zip` 与同名 `.sha256`；
+- 校验：`Get-FileHash .\astrbot_plugin_digital_memory_store-1.0.3.zip -Algorithm SHA256`；
+- 解压后把 `astrbot_plugin_digital_memory_store/` 整个目录放进 AstrBot 的 `data/plugins/`，
+  重启 AstrBot；随后按 `INSTALL.md` 配置白名单与模型目录。
+
 ## 安装
 
 见 `INSTALL.md`（脚本安装/升级/回退，约 5 分钟；首次装依赖与模型另计）。
@@ -49,4 +57,8 @@ AstrBot 插件：把**私聊纯文本**里的原话保存在本机，需要时�
 - 纠错只给“新旧并列 + 未确认”，不会自动改写事实。
 - 5,000 条压测与崩溃恢复使用的是合成/受控数据；长期运行仍建议定期备份。
 
-历史开发记录见仓库 `dev/docs/PLUGIN_HISTORY.md`（不随包分发）。
+历史开发记录（`PLUGIN_HISTORY.md`）保留在开发工作区，不随本仓库与安装包分发。
+
+## 许可证
+
+MIT，见 [`LICENSE`](LICENSE)。
