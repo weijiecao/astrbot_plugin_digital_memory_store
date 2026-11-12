@@ -156,13 +156,21 @@ if (-not $SkipModel) {
 # ---------- 4. 复制插件 ----------
 $pluginsDir = Join-Path $AstrBotRoot 'data\plugins'
 $target = Join-Path $pluginsDir $PluginName
+$backupRoot = Join-Path $AstrBotRoot 'data\plugins_backup'
 if (-not (Test-Path $pluginsDir)) { New-Item -ItemType Directory -Force -Path $pluginsDir | Out-Null }
 if (Test-Path $target) {
-    $backupRoot = Join-Path $AstrBotRoot 'data\plugins_backup'
     New-Item -ItemType Directory -Force -Path $backupRoot | Out-Null
     $backup = Join-Path $backupRoot ("{0}_{1}" -f $PluginName, (Get-Date -Format 'yyyyMMdd_HHmmss'))
     Move-Item $target $backup
     Note "旧版本已备份：$backup"
+}
+# 升级前同时备份数据目录；数据库与插件目录分离，不能只备份插件。
+$dataDir = Join-Path $AstrBotRoot ("data\plugin_data\$PluginName")
+if (Test-Path $dataDir) {
+    New-Item -ItemType Directory -Force -Path $backupRoot | Out-Null
+    $dataBackup = Join-Path $backupRoot ("dlm_data_{0}" -f (Get-Date -Format 'yyyyMMdd_HHmmss'))
+    Copy-Item $dataDir $dataBackup -Recurse -Force
+    Note "数据目录已备份：$dataBackup（请保留到升级验证完成）"
 }
 New-Item -ItemType Directory -Force -Path $target | Out-Null
 Get-ChildItem $Source -Recurse -File |
@@ -266,8 +274,8 @@ Ok "配置已写入：$configPath"
 Write-Host ''
 Write-Host '=== 装好了，下一步 ===' -ForegroundColor Cyan
 Write-Host '  1) 重启 AstrBot（必须，否则插件不会重新加载）'
-Write-Host '  2) 用白名单号私聊发送：/dlm 上下文状态'
-Write-Host '     看到“本地模型：就绪/未配置”且采集计数增长，即正常'
+Write-Host '  2) 重启后打开 WebUI 插件页 → 数字生命记忆库 → panel 查看采集/备份'
+Write-Host '     v1.0.18 起聊天里没有 /dlm 命令；不要向用户暴露记忆系统'
 Write-Host '  3) WebUI 插件页 → 数字生命记忆库 → panel：存储/备份/容量'
 Write-Host ''
 Write-Host "  配置：$configPath"
